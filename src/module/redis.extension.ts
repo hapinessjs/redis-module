@@ -16,10 +16,11 @@ export class RedisExt implements OnExtensionLoad {
 
     /**
      * Initilization of the extension
-     * Create the socket server
+     * Create the manager instance
      *
      * @param  {CoreModule} module
-     * @param  {SocketConfig} config
+     * @param  {RedisConfig} config
+     *
      * @returns Observable
      */
     onExtensionLoad(module: CoreModule, config: RedisConfig): Observable<Extension> {

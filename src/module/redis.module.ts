@@ -2,7 +2,7 @@ import { HapinessModule } from '@hapiness/core';
 import { RedisClientService } from './services';
 
 @HapinessModule({
-    version: '1.0.0-beta.1',
+    version: '1.0.0-rc.7',
     declarations: [],
     providers: [],
     exports: [RedisClientService]
