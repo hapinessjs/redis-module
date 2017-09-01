@@ -3,3 +3,4 @@ export * from './redis.extension';
 export * from './interfaces';
 export * from './managers';
 export * from './services';
+export * from './common';
