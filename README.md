@@ -111,7 +111,7 @@ Hapiness
 ```
 export interface ClientOpts {
 
-	host?: string;
+    host?: string;
     port?: number;
     path?: string;
     url?: string;
@@ -146,9 +146,9 @@ To use redis, you need to inject inside your providers the ```RedisClientService
 
 ```javascript
 
-class FooProvider implements OnPost {
+class FooProvider {
 
-	constructor(private _redis: RedisClientService) {}
+    constructor(private _redis: RedisClientService) {}
 
     bar(): Observable<string> {
     	return this._redis.connection.get('my_key');
@@ -164,13 +164,6 @@ class FooProvider implements OnPost {
 ```RedisClientService.connection``` this will return you the redis client and you will be able to call on it every redis command (see the list of commands [here](https://redis.io/commands))
 
 **INFO** All function returns RxJS Observable
-
-```RedisClientService.lock(string, number, string?)``` will create a lock in the given key for ttl specified in second parameter. Third parameter is the ttl unit (**NX** for second and **MX** for milliseconds)
-
-```RedisClientService.unlock(string)``` remove a lock for the given key
-
-```RedisClientService.isLocked(string)``` check if there is a lock on the specified key
-
 
 [Back to top](#table-of-contents)
 
