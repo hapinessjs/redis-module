@@ -88,8 +88,8 @@ class RedisModuleIntegrationTest {
             HttpServerExt.setConfig({ host: '0.0.0.0', port: 1234 }),
             RedisExt.setConfig(
                 {
-                    url: '//tdw01.dev01.in.tdw:6379',
-                    password: 't4d4r3d1s',
+                    url: '//test.com',
+                    password: 'mdp',
                     db: '1'
                 }
             )
