@@ -191,6 +191,6 @@ class FooProvider {
 
 ## License
 
-Copyright (c) 2017 **Hapiness** Licensed under the [MIT license](https://github.com/hapinessjs/empty-module/blob/master/LICENSE.md).
+Copyright (c) 2017 **Hapiness** Licensed under the [MIT license](https://github.com/hapinessjs/redis-module/blob/master/LICENSE.md).
 
 [Back to top](#table-of-contents)
