@@ -2,17 +2,17 @@
 
 <div style="margin-bottom:20px;">
 <div style="line-height:60px">
-    <a href="https://travis-ci.org/hapinessjs/empty-module.svg?branch=master">
-        <img src="https://travis-ci.org/hapinessjs/empty-module.svg?branch=master" alt="build" />
+    <a href="https://travis-ci.org/hapinessjs/redis-module.svg?branch=master">
+        <img src="https://travis-ci.org/hapinessjs/redis-module.svg?branch=master" alt="build" />
     </a>
-    <a href="https://coveralls.io/github/hapinessjs/empty-module?branch=master">
-        <img src="https://coveralls.io/repos/github/hapinessjs/empty-module/badge.svg?branch=master" alt="coveralls" />
+    <a href="https://coveralls.io/github/hapinessjs/redis-module?branch=master">
+        <img src="https://coveralls.io/repos/github/hapinessjs/redis-module/badge.svg?branch=master" alt="coveralls" />
     </a>
-    <a href="https://david-dm.org/hapinessjs/empty-module">
-        <img src="https://david-dm.org/hapinessjs/empty-module.svg" alt="dependencies" />
+    <a href="https://david-dm.org/hapinessjs/redis-module">
+        <img src="https://david-dm.org/hapinessjs/redis-module.svg" alt="dependencies" />
     </a>
-    <a href="https://david-dm.org/hapinessjs/empty-module?type=dev">
-        <img src="https://david-dm.org/hapinessjs/empty-module/dev-status.svg" alt="devDependencies" />
+    <a href="https://david-dm.org/hapinessjs/redis-module?type=dev">
+        <img src="https://david-dm.org/hapinessjs/redis-module/dev-status.svg" alt="devDependencies" />
     </a>
 </div>
 <div>
@@ -59,7 +59,7 @@ $ yarn add @hapiness/redis
     
 ```javascript
 "dependencies": {
-    "@hapiness/core": "^1.0.0-rc.6",
+    "@hapiness/core": "^1.0.0-rc.7",
     "@hapiness/redis": "^1.0.0-rc.7",
     //...
 }
