@@ -50,17 +50,18 @@
 ### `yarn` or `npm` it in your `package.json`
 
 ```bash
-$ npm install --save @hapiness/redis
+$ npm install --save @hapiness/core @hapiness/redis rxjs
 
 or
 
-$ yarn add @hapiness/redis
+$ yarn add @hapiness/core @hapiness/redis rxjs
 ```
     
 ```javascript
 "dependencies": {
-    "@hapiness/core": "^1.0.0-rc.7",
-    "@hapiness/redis": "^1.0.0-rc.7",
+    "@hapiness/core": "^1.1.1",
+    "@hapiness/redis": "^1.0.0",
+    "rxjs": "^5.5.2",
     //...
 }
 //...
@@ -171,7 +172,7 @@ class FooProvider {
 
 <table>
     <tr>
-        <td colspan="4" align="center"><a href="https://www.tadaweb.com"><img src="https://tadaweb.com/images/tadaweb/logo.png" width="117" alt="tadaweb" /></a></td>
+        <td colspan="4" align="center"><a href="https://www.tadaweb.com"><img src="http://bit.ly/2xHQkTi" width="117" alt="tadaweb" /></a></td>
     </tr>
     <tr>
         <td align="center"><a href="https://github.com/Juneil"><img src="https://avatars3.githubusercontent.com/u/6546204?v=3&s=117" width="117"/></a></td>

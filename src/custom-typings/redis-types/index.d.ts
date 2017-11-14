@@ -14,7 +14,7 @@
 
 import { EventEmitter } from 'events';
 import { Duplex } from 'stream';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 export interface RetryStrategyOptions {
     error: Error;

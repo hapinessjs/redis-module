@@ -4,7 +4,8 @@
         "outDir": ".",
         "rootDir": "./src",
         "types": [
-            "node"
+            "node",
+            "redis-types"
         ]
     },
     "exclude": [

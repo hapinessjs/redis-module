@@ -1,14 +1,13 @@
 import * as unit from 'unit.js';
 
 import { test, suite } from 'mocha-typescript';
-import { Observable } from 'rxjs/Observable';
-import { Callback, RedisClient } from 'redis';
+import { Callback } from 'redis';
 
 import { RedisClientManager } from '../../src';
 import { mockRedisCreateConnection } from '../mocks';
 
 @suite('- Unit RedisClientManagerTest file')
-class RedisClientManagerTest {
+export class RedisClientManagerTest {
 
     @test('- Create the manager')
     testCreateManager(done) {

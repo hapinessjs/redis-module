@@ -1,19 +1,15 @@
-
 /**
  * @see https://github.com/pana-cc/mocha-typescript
  */
-import { test, suite, only } from 'mocha-typescript';
+import { test, suite } from 'mocha-typescript';
 
 /**
  * @see http://unitjs.com/
  */
 import * as unit from 'unit.js';
 
-import { extractMetadata } from '@hapiness/core/core';
-import { Hapiness, HapinessModule, OnStart, Inject } from '@hapiness/core';
-import { HttpServerExt, Server } from '@hapiness/core/extensions/http-server';
-
-import { Observable } from 'rxjs/Observable';
+import { Hapiness, HapinessModule, Inject, OnStart, Server } from '@hapiness/core';
+import { HttpServerExt } from '@hapiness/core/extensions/http-server';
 
 // Mongoose mocking
 import { FakeRedisClient, mockRedisCreateConnection } from '../mocks';
@@ -22,32 +18,37 @@ import { FakeRedisClient, mockRedisCreateConnection } from '../mocks';
 import { RedisExt, RedisModule, RedisClientService } from '../../src';
 
 @suite('- Integration tests of RedisModule')
-class RedisModuleIntegrationTest {
+export class RedisModuleIntegrationTest {
     /**
      * Function executed before the suite
      */
-    static before() { }
+    static before() {
+    }
 
     /**
      * Function executed after the suite
      */
-    static after() { }
+    static after() {
+    }
 
     /**
      * Class constructor
      * New lifecycle
      */
-    constructor() { }
+    constructor() {
+    }
 
     /**
      * Function executed before each test
      */
-    before() {}
+    before() {
+    }
 
     /**
      * Function executed after each test
      */
-    after() {}
+    after() {
+    }
 
     /**
      * Test if `RedisModule` is correctly integrated and has functions
@@ -63,10 +64,9 @@ class RedisModuleIntegrationTest {
             imports: [RedisModule]
         })
         class RedisModuleTest implements OnStart {
-            constructor(
-                @Inject(HttpServerExt) private _httpServer: Server,
-                private _redisClient: RedisClientService
-            ) {}
+            constructor(@Inject(HttpServerExt) private _httpServer: Server,
+                        private _redisClient: RedisClientService) {
+            }
 
             onStart(): void {
                 this
@@ -77,9 +77,17 @@ class RedisModuleIntegrationTest {
                         res => {
                             unit.string(res).is('param');
                             redisStub.restore();
-                            done();
+                            this
+                                ._httpServer
+                                .stop()
+                                .then(__ => done())
+                                .catch(err => done(err))
                         },
-                        err => done(err)
+                        err => this
+                            ._httpServer
+                            .stop()
+                            .then(__ => done(err))
+                            .catch(e => done(e))
                     );
             }
         }
