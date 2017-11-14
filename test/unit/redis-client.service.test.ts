@@ -1,13 +1,12 @@
 import * as unit from 'unit.js';
 
 import { test, suite } from 'mocha-typescript';
-import { Observable } from 'rxjs/Observable';
 
 import { RedisClientManager, RedisClientService } from '../../src';
 import { FakeRedisClient, mockRedisCreateConnection } from '../mocks';
 
 @suite('- Unit RedisClientServiceTest file')
-class RedisClientServiceTest {
+export class RedisClientServiceTest {
 
     @test('- Create the service and get the connection')
     testCreateServiceAndGetConnection(done) {

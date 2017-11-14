@@ -3,12 +3,10 @@ import * as redis_commands from 'redis-commands';
 import { Injectable, Inject } from '@hapiness/core';
 
 import { HapinessRedisClient } from '../../custom-typings/redis-types';
-import { Observable } from 'rxjs';
-import { RedisClient } from 'redis';
+import { Observable } from 'rxjs/Observable';
 
 import { RedisExt } from '../redis.extension';
 
-import { RedisConfig } from '../interfaces';
 import { RedisClientManager } from '../managers';
 
 

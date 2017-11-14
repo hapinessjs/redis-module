@@ -1,12 +1,11 @@
 import * as unit from 'unit.js';
 
 import { test, suite } from 'mocha-typescript';
-import { Observable } from 'rxjs/Observable';
 
 import { DefaultValues } from '../../src';
 
 @suite('- CommonValuesTest')
-class CommonValuesTest {
+export class CommonValuesTest {
 
     @test('- Test of the RETRY_STRATEGY function')
     testCommonRetryStrategyFunction() {
