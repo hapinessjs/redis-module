@@ -59,9 +59,9 @@ $ yarn add @hapiness/core @hapiness/redis rxjs
     
 ```javascript
 "dependencies": {
-    "@hapiness/core": "^1.1.1",
-    "@hapiness/redis": "^1.0.0",
-    "rxjs": "^5.5.2",
+    "@hapiness/core": "^1.3.0",
+    "@hapiness/redis": "^1.0.1",
+    "rxjs": "^5.5.5",
     //...
 }
 //...
