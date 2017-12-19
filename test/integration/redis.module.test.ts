@@ -8,8 +8,7 @@ import { test, suite } from 'mocha-typescript';
  */
 import * as unit from 'unit.js';
 
-import { Hapiness, HapinessModule, Inject, OnStart, Server } from '@hapiness/core';
-import { HttpServerExt } from '@hapiness/core/extensions/http-server';
+import { Hapiness, HapinessModule, Inject, OnStart, Server, HttpServerExt } from '@hapiness/core';
 
 // Mongoose mocking
 import { FakeRedisClient, mockRedisCreateConnection } from '../mocks';
