@@ -1,6 +1,7 @@
 import * as unit from 'unit.js';
 
 import { test, suite } from 'mocha-typescript';
+import { Observable } from 'rxjs';
 
 import { RedisClientManager, RedisClientService } from '../../src';
 import { FakeRedisClient, mockRedisCreateConnection } from '../mocks';
@@ -10,8 +11,10 @@ export class RedisClientServiceTest {
 
     @test('- Create the service and get the connection')
     testCreateServiceAndGetConnection(done) {
+        const fakeInst = new FakeRedisClient();
+
         const redisStub = mockRedisCreateConnection();
-        redisStub.returns(<any>new FakeRedisClient());
+        redisStub.returns(<any>fakeInst);
 
         const manager = new RedisClientManager(
             {
@@ -21,11 +24,17 @@ export class RedisClientServiceTest {
             }
         );
 
-        const service = new RedisClientService(manager);
+        Observable
+            .of(fakeInst)
+            .delay(new Date(Date.now() + 1500))
+            .map(_ => _.emit('ready'))
+            .subscribe();
 
-        service
-            .connection
-            .get('param')
+
+        Observable.of(manager)
+            .flatMap(_ => _.createClient().map(__ => _))
+            .map(_ => new RedisClientService(<any> _))
+            .flatMap(_ => _.connection.get('param'))
             .subscribe(
                 res => {
                     unit.string(res).is('param');
