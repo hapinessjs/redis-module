@@ -1,10 +1,12 @@
 import { createClient, RedisClient } from 'redis';
+import { Observable } from 'rxjs';
 
 import { RedisConfig } from '../interfaces';
 import { DefaultValues } from '../common';
 
 export class RedisClientManager {
 
+    private _config: any;
     private _client: RedisClient;
 
     constructor(config: RedisConfig) {
@@ -16,7 +18,22 @@ export class RedisClientManager {
         delete config.reconnect_interval;
 
         // Create the redis client
-        this._client = createClient(config);
+        this._config = config;
+    }
+
+    public createClient() {
+        return Observable.create(
+            observer => {
+                this._client = createClient(this._config);
+                this._client.on('ready', () => {
+                    observer.next();
+                    observer.complete();
+                });
+                this._client.on('error', err => {
+                    observer.error(err);
+                });
+            }
+        );
     }
 
     public get client(): RedisClient {

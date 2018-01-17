@@ -26,6 +26,7 @@ export class RedisExt implements OnExtensionLoad {
     onExtensionLoad(module: CoreModule, config: RedisConfig): Observable<Extension> {
         return Observable
             .of(new RedisClientManager(config))
+            .switchMap(_ => _.createClient().map(__ => _))
             .map(_ => ({
                 instance: this,
                 token: RedisExt,

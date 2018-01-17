@@ -7,6 +7,7 @@ import { test, suite } from 'mocha-typescript';
  * @see http://unitjs.com/
  */
 import * as unit from 'unit.js';
+import { Observable } from 'rxjs';
 
 import { Hapiness, HapinessModule, Inject, OnStart, Server, HttpServerExt } from '@hapiness/core';
 
@@ -18,44 +19,47 @@ import { RedisExt, RedisModule, RedisClientService } from '../../src';
 
 @suite('- Integration tests of RedisModule')
 export class RedisModuleIntegrationTest {
+
     /**
      * Function executed before the suite
      */
-    static before() {
-    }
+    static before() {}
 
     /**
      * Function executed after the suite
      */
-    static after() {
-    }
+    static after() {}
 
     /**
      * Class constructor
      * New lifecycle
      */
-    constructor() {
-    }
+    constructor() {}
 
     /**
      * Function executed before each test
      */
-    before() {
-    }
+    before() {}
 
     /**
      * Function executed after each test
      */
-    after() {
-    }
+    after() {}
 
     /**
      * Test if `RedisModule` is correctly integrated and has functions
      */
     @test('- Test if `RedisModule` is correctly integrated and has functions')
     testRedisModule(done) {
+        const fakeInst = new FakeRedisClient();
         const redisStub = mockRedisCreateConnection();
-        redisStub.returns(<any>new FakeRedisClient());
+        redisStub.returns(<any> fakeInst);
+
+        Observable
+            .of(fakeInst)
+            .delay(new Date(Date.now() + 1500))
+            .map(_ => _.emit('ready'))
+            .subscribe();
 
         @HapinessModule({
             version: '1.0.0',
@@ -63,9 +67,10 @@ export class RedisModuleIntegrationTest {
             imports: [RedisModule]
         })
         class RedisModuleTest implements OnStart {
-            constructor(@Inject(HttpServerExt) private _httpServer: Server,
-                        private _redisClient: RedisClientService) {
-            }
+            constructor(
+                @Inject(HttpServerExt) private _httpServer: Server,
+                private _redisClient: RedisClientService
+            ) {}
 
             onStart(): void {
                 this
