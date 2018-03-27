@@ -11,4 +11,9 @@ export class FakeRedisClient extends EventEmitter {
         cb(null, param);
         return true;
     }
+
+    quit(cb: redis.Callback<void>) {
+        cb(null, null);
+        return true;
+    }
 }

@@ -1,11 +1,11 @@
-import { CoreModule, Extension, ExtensionWithConfig, OnExtensionLoad } from '@hapiness/core';
+import { CoreModule, Extension, ExtensionWithConfig, OnExtensionLoad, ExtensionShutdownPriority, OnShutdown } from '@hapiness/core';
 
 import { Observable } from 'rxjs/Observable';
 
 import { RedisConfig } from './interfaces';
 import { RedisClientManager } from './managers';
 
-export class RedisExt implements OnExtensionLoad {
+export class RedisExt implements OnExtensionLoad, OnShutdown {
 
     public static setConfig(config: RedisConfig): ExtensionWithConfig {
         return {
@@ -26,11 +26,18 @@ export class RedisExt implements OnExtensionLoad {
     onExtensionLoad(module: CoreModule, config: RedisConfig): Observable<Extension> {
         return Observable
             .of(new RedisClientManager(config))
-            .switchMap(_ => _.createClient().map(__ => _))
-            .map(_ => ({
+            .switchMap(redisClient => redisClient.createClient().map(() => redisClient))
+            .map(redisClient => ({
                 instance: this,
                 token: RedisExt,
-                value: _
+                value: redisClient
             }));
+    }
+
+    onShutdown(module, redisClient: RedisClientManager) {
+        return {
+            priority: ExtensionShutdownPriority.NORMAL,
+            resolver: Observable.bindNodeCallback(redisClient.client.quit)()
+        };
     }
 }
