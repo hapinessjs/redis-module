@@ -32,16 +32,24 @@ export class RedisClientManagerTest {
 
         manager
             .createClient()
+            .flatMap(() => manager.clientObs.setex('param', 60, 'xaxa'))
+            .catch(err => {
+                unit.object(err).isInstanceOf(Error).hasProperty('message', 'Cannot SETEX');
+                return Observable.of(null);
+            })
             .subscribe(
                 _ => {
+                    unit.bool(manager.clientObs.connected).isTrue();
                     manager.client.get('param', (err, res) => {
                         unit.string(res).is('param');
                         redisStub.restore();
                         done();
                     });
                 },
-                err => done(err)
-            );
+                err => {
+                    redisStub.restore();
+                    done(err)
+                });
     }
 
     @test('- Dont create the manager and return error')
@@ -68,10 +76,13 @@ export class RedisClientManagerTest {
         manager
             .createClient()
             .subscribe(
-                _ => done(new Error('Should not be there')),
-                err => {
-                    unit.string(err.message).is('Thrown by fakeInst');
+                _ => {
                     redisStub.restore();
+                    done(new Error('Should not be there'));
+                },
+                err => {
+                    redisStub.restore();
+                    unit.string(err.message).is('Thrown by fakeInst');
                     done();
                 }
             );

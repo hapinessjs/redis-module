@@ -87,12 +87,14 @@ export class RedisModuleIntegrationTest {
                                 .then(__ => done())
                                 .catch(err => done(err))
                         },
-                        err => this
+                        err => {
+                            redisStub.restore();
+                            this
                             ._httpServer
                             .stop()
                             .then(__ => done(err))
                             .catch(e => done(e))
-                    );
+                        });
             }
         }
 
