@@ -8,7 +8,7 @@ export class DefaultValues {
 
     public static RETRY_STRATEGY(reconnect_interval?: number): RetryStrategy {
         return (opts: RetryStrategyOptions): number | Error => {
-            debug('RETRY CONNECT', opts.error, opts.attempt);
+            debug('RETRY CONNECT');
             return reconnect_interval || DefaultValues.RECONNECT_INTERVAL
         };
     }
