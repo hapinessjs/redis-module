@@ -31,17 +31,23 @@ export class RedisClientServiceTest {
             .subscribe();
 
 
+        let redisService: RedisClientService;
         Observable.of(manager)
             .flatMap(_ => _.createClient().map(__ => _))
-            .map(_ => new RedisClientService(<any> _))
-            .flatMap(_ => _.connection.get('param'))
+            .map(client => new RedisClientService(<any> client))
+            .do(_ => redisService = _)
+            .flatMap(() => redisService.connection.get('param'))
+            .do(res => unit.string(res).is('param'))
+            .flatMap(() => Observable.bindNodeCallback(redisService.client.get)('param'))
+            .do(res => unit.string(res).is('param'))
             .subscribe(
                 res => {
-                    unit.string(res).is('param');
                     redisStub.restore();
                     done();
                 },
-                err => done(err)
-            );
+                err => {
+                    redisStub.restore();
+                    done(err);
+                });
     }
 }
