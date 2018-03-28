@@ -1,30 +1,15 @@
-import * as redis_commands from 'redis-commands';
-
 import { Injectable, Inject } from '@hapiness/core';
 
 import { HapinessRedisClient } from '../../custom-typings/redis-types';
-import { Observable } from 'rxjs/Observable';
 
 import { RedisExt } from '../redis.extension';
 
 import { RedisClientManager } from '../managers';
-
+import { RedisClient } from 'redis';
 
 @Injectable()
 export class RedisClientService {
-
-    private _client: HapinessRedisClient;
-
-    constructor(@Inject(RedisExt) private _redisManager: RedisClientManager) {
-        this._client = <any> _redisManager.client;
-        redis_commands
-            .list
-            .forEach(command => {
-                if (typeof this._redisManager.client[command] === 'function') {
-                    this._client[command] = Observable.bindNodeCallback(this._client[command]);
-                }
-            });
-    }
+    constructor(@Inject(RedisExt) private _redisManager: RedisClientManager) {}
 
     /**
      * Return the HapinessRedisClient
@@ -32,6 +17,10 @@ export class RedisClientService {
      * See documentation at <https://redis.io/commands>
      */
     public get connection(): HapinessRedisClient {
-        return this._client;
+        return this._redisManager.clientObs;
+    }
+
+    public get client(): RedisClient {
+        return this._redisManager.client;
     }
 }

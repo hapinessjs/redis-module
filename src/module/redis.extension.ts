@@ -5,6 +5,8 @@ import { Observable } from 'rxjs/Observable';
 import { RedisConfig } from './interfaces';
 import { RedisClientManager } from './managers';
 
+const debug = require('debug')('hapiness:redis');
+
 export class RedisExt implements OnExtensionLoad, OnShutdown {
 
     public static setConfig(config: RedisConfig): ExtensionWithConfig {
@@ -24,6 +26,7 @@ export class RedisExt implements OnExtensionLoad, OnShutdown {
      * @returns Observable
      */
     onExtensionLoad(module: CoreModule, config: RedisConfig): Observable<Extension> {
+        debug('load redis extension', config);
         return Observable
             .of(new RedisClientManager(config))
             .switchMap(redisClient => redisClient.createClient().map(() => redisClient))
@@ -35,9 +38,10 @@ export class RedisExt implements OnExtensionLoad, OnShutdown {
     }
 
     onShutdown(module, redisClient: RedisClientManager) {
+        debug('SIGTERM received, shutdown redis');
         return {
             priority: ExtensionShutdownPriority.NORMAL,
-            resolver: Observable.bindNodeCallback(redisClient.client.quit)()
+            resolver: redisClient.clientObs.quit()
         };
     }
 }

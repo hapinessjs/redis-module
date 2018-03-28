@@ -1,12 +1,16 @@
 import { RetryStrategy, RetryStrategyOptions } from 'redis';
 
+const debug = require('debug')('hapiness:redis');
+
 export class DefaultValues {
 
     public static RECONNECT_INTERVAL = 5000;
 
     public static RETRY_STRATEGY(reconnect_interval?: number): RetryStrategy {
-        return (opts: RetryStrategyOptions): number | Error =>
-            reconnect_interval || DefaultValues.RECONNECT_INTERVAL;
+        return (opts: RetryStrategyOptions): number | Error => {
+            debug('RETRY CONNECT', opts.error, opts.attempt);
+            return reconnect_interval || DefaultValues.RECONNECT_INTERVAL
+        };
     }
 
 }

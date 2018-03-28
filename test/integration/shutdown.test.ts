@@ -36,7 +36,10 @@ export class RedisModuleIntegrationTest {
                     .do(() => {
                         redisStub.restore();
                     })
-                    .subscribe(() => done(), err => done(err));
+                    .subscribe(() => done(), err => {
+                        redisStub.restore();
+                        done(err)
+                    });
             }
         }
 
