@@ -5,6 +5,7 @@ import * as redis_commands from 'redis-commands';
 import * as EventEmitter from 'events';
 
 import { Observable } from 'rxjs';
+import { URL } from 'url';
 
 import { RedisConfig } from '../interfaces';
 import { DefaultValues } from '../common';
@@ -61,6 +62,10 @@ export class RedisClientManager {
 
         // Removed unused properties by RedisConfig
         delete config.reconnect_interval;
+
+        if (config.url && config.url.match(/^rediss/) && !config.tls) {
+            config.tls = { servername: new URL(config.url).hostname };
+        }
 
         // Create the redis client
         this._config = config;

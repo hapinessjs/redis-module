@@ -56,7 +56,7 @@ or
 
 $ yarn add @hapiness/core @hapiness/redis rxjs
 ```
-    
+
 ```javascript
 "dependencies": {
     "@hapiness/core": "^1.3.0",
@@ -135,7 +135,7 @@ export interface ClientOpts {
     tls?: any;
     prefix?: string;
     retry_strategy?: RetryStrategy;
-    
+
 }
 
 ```
@@ -154,7 +154,7 @@ class FooProvider {
     bar(): Observable<string> {
     	return this._redis.connection.get('my_key');
     }
-   
+
 }
 
 ```

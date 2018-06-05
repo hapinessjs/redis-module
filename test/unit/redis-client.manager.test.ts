@@ -87,4 +87,85 @@ export class RedisClientManagerTest {
                 }
             );
     }
+
+    @test('- Test url with rediss:// as protocol creates tls object')
+    testUrlRediss(done) {
+        const fakeInst = new FakeRedisClient();
+
+        Observable
+            .of(fakeInst)
+            .delay(new Date(Date.now() + 1500))
+            .map(_ => fakeInst.emit('ready'))
+            .subscribe();
+
+        const redisStub = mockRedisCreateConnection();
+        redisStub.returns(<any>fakeInst);
+
+        const manager = new RedisClientManager(
+            {
+                url: 'rediss://:pass_redis@toto',
+                db: 1
+            }
+        );
+
+        manager
+            .createClient()
+            .subscribe(
+                _ => {
+                    redisStub.restore();
+                    unit.object(redisStub.firstCall);
+                    unit.array(redisStub.firstCall.args);
+                    unit.object(redisStub.firstCall.args[0].tls).is({
+                        servername: 'toto'
+                    });
+                    done();
+                },
+                err => {
+                    redisStub.restore();
+                    done(new Error('Should not be there'));
+                }
+            );
+    }
+
+    @test('- Test url with rediss:// as protocol do not create tls object if already provided')
+    testUrlRedissTls(done) {
+        const fakeInst = new FakeRedisClient();
+
+        Observable
+            .of(fakeInst)
+            .delay(new Date(Date.now() + 1500))
+            .map(_ => fakeInst.emit('ready'))
+            .subscribe();
+
+        const redisStub = mockRedisCreateConnection();
+        redisStub.returns(<any>fakeInst);
+
+        const manager = new RedisClientManager(
+            {
+                url: 'rediss://:pass_redis@toto',
+                db: 1,
+                tls: {
+                    servername: 'toto2'
+                }
+            }
+        );
+
+        manager
+            .createClient()
+            .subscribe(
+                _ => {
+                    redisStub.restore();
+                    unit.object(redisStub.firstCall);
+                    unit.array(redisStub.firstCall.args);
+                    unit.object(redisStub.firstCall.args[0].tls).is({
+                        servername: 'toto2'
+                    });
+                    done();
+                },
+                err => {
+                    redisStub.restore();
+                    done(new Error('Should not be there'));
+                }
+            );
+    }
 }
