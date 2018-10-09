@@ -135,7 +135,7 @@ export interface ClientOpts {
     tls?: any;
     prefix?: string;
     retry_strategy?: RetryStrategy;
-
+    ping_keepalive_interval?: number: // In seconds
 }
 
 ```
