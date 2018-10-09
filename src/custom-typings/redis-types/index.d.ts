@@ -141,7 +141,7 @@ export interface Commands<R> {
     /**
      * Ping the server.
      */
-    ing(): Observable<string>;
+    ping(): Observable<string>;
     ping(message: string): Observable<string>;
 
     /**
