@@ -11,6 +11,8 @@ import { RedisConfig } from '../interfaces';
 import { DefaultValues } from '../common';
 import { HapinessRedisClient } from '../../custom-typings/redis-types';
 
+const debug = require('debug')('hapiness:redis');
+
 const ClientProperties = [
     // redis properties, forwarded read-only.
     'connection_id',
@@ -51,7 +53,7 @@ const AllEvents = [
 
 export class RedisClientManager {
 
-    private _config: any;
+    private _config: RedisConfig;
     private _client: RedisClient;
     private _redisClientObs: HapinessRedisClient;
 
@@ -72,19 +74,33 @@ export class RedisClientManager {
     }
 
     public createClient() {
-        return Observable.create(
-            observer => {
-                this._client = createClient(this._config);
-                this.createObservableClient();
-                this._redisClientObs.on('ready', () => {
-                    observer.next();
-                    observer.complete();
-                });
-                this._redisClientObs.on('error', err => {
-                    observer.error(err);
-                });
-            }
-        );
+        return Observable
+            .create(
+                observer => {
+                    this._client = createClient(this._config);
+
+                    this.createObservableClient();
+
+                    this._redisClientObs.on('ready', () => {
+                        observer.next();
+                        observer.complete();
+                    });
+
+                    this._redisClientObs.on('error', err => {
+                        observer.error(err);
+                    });
+                }
+            )
+            .do(() => {
+                if (this._config && this._config.ping_keepalive_interval) {
+                    Observable
+                        .interval(this._config.ping_keepalive_interval * 1000)
+                        .do(_ => debug(`Sending ping to redis...`))
+                        .flatMap(() => this._redisClientObs.ping())
+                        .do(_ => debug(`Ping sent, response=${_}`))
+                        .subscribe();
+                }
+            });
     }
 
     createObservableClient() {
@@ -93,7 +109,8 @@ export class RedisClientManager {
         const client = this._client;
 
         redis_commands
-            .list.forEach(command => {
+            .list
+            .forEach(command => {
                 Object.defineProperty(redisClientObs, command, {
                     configurable: true,
                     enumerable: false,
