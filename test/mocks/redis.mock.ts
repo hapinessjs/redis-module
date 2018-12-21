@@ -15,8 +15,7 @@ export class FakeRedisClient extends EventEmitter {
     }
 
     get(param: string, cb: redis.Callback<string>) {
-        setTimeout(() => cb(null, param), 250);
-        // cb(null, param);
+        cb(null, param);
         return true;
     }
 
