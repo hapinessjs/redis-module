@@ -32,4 +32,6 @@ export class FakeRedisClient extends EventEmitter {
         cb(null, null);
         return true;
     }
+
+    end() {}
 }

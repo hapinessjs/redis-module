@@ -168,4 +168,29 @@ export class RedisClientManagerTest {
                 }
             );
     }
+
+    // @test.only('- ')
+    // test(done) {
+    //     const fakeInst = new FakeRedisClient();
+
+    //     const redisStub = mockRedisCreateConnection();
+    //     redisStub.returns(<any>fakeInst);
+
+    //     Observable
+    //         .of(fakeInst)
+    //         .delay(new Date(Date.now() + 1500))
+    //         .map(_ => fakeInst.emit('ready'))
+    //         .subscribe();
+
+    //     const manager = new RedisClientManager(
+    //         {
+    //             url: '//toto',
+    //             password: 'pass_redis',
+    //             db: '2'
+    //         }
+    //     );
+
+    //     manager.createClient().flatMap(_ => manager.sendCommand('get', []))
+    //         .subscribe(_ => { console.log('NEXT'); done() }, e => { console.log(e); done(e) });
+    // }
 }
