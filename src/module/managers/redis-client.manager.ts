@@ -4,7 +4,7 @@ import * as redis_commands from 'redis-commands';
 
 import * as EventEmitter from 'events';
 
-import { Observable } from 'rxjs';
+import { Observable, TimeoutError } from 'rxjs';
 import { URL } from 'url';
 
 import { RedisConfig } from '../interfaces';
@@ -148,7 +148,17 @@ export class RedisClientManager {
                     observer.complete();
                 }
             });
-        });
+        }).timeout((this._config.command_timeout || 2) * 1000).retryWhen(e =>
+            e.flatMap(err => {
+                if (err instanceof TimeoutError) {
+                    this._client.end(true);
+                    debug(`Got a timeout on ${command}`);
+                    return this.createClient();
+                } else {
+                    return Observable.throw(err);
+                }
+            })
+        );
     }
 
     public get client(): RedisClient {

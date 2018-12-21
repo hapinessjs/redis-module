@@ -15,7 +15,8 @@ export class FakeRedisClient extends EventEmitter {
     }
 
     get(param: string, cb: redis.Callback<string>) {
-        cb(null, param);
+        setTimeout(() => cb(null, param), 250);
+        // cb(null, param);
         return true;
     }
 
@@ -32,4 +33,6 @@ export class FakeRedisClient extends EventEmitter {
         cb(null, null);
         return true;
     }
+
+    end() {}
 }
