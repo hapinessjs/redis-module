@@ -4,7 +4,7 @@ import * as redis_commands from 'redis-commands';
 
 import * as EventEmitter from 'events';
 
-import { Observable, TimeoutError } from 'rxjs';
+import { Observable, TimeoutError, Subscription } from 'rxjs';
 import { URL } from 'url';
 
 import { RedisConfig } from '../interfaces';
@@ -56,8 +56,11 @@ export class RedisClientManager {
     private _config: RedisConfig;
     private _client: RedisClient;
     private _redisClientObs: HapinessRedisClient;
+    private _pingCheckSubscription: Subscription;
 
     constructor(config: RedisConfig) {
+        this._pingCheckSubscription = undefined;
+
         // If no retry strategy provided, we'll use the default one
         config.retry_strategy =
             config.retry_strategy || DefaultValues.RETRY_STRATEGY(config.reconnect_interval);
@@ -77,6 +80,13 @@ export class RedisClientManager {
         return Observable
             .create(
                 observer => {
+                    // If we are comming there because of the timeout, the client
+                    // probably exists so kick it before recreating it
+                    if (this._client) {
+                        this._client.removeAllListeners();
+                        this._client = undefined;
+                    }
+
                     this._client = createClient(this._config);
 
                     this.createObservableClient();
@@ -93,7 +103,11 @@ export class RedisClientManager {
             )
             .do(() => {
                 if (this._config && this._config.ping_keepalive_interval) {
-                    Observable
+                    if (this._pingCheckSubscription) {
+                        this._pingCheckSubscription.unsubscribe();
+                        this._pingCheckSubscription = undefined;
+                    }
+                    this._pingCheckSubscription = Observable
                         .interval(this._config.ping_keepalive_interval * 1000)
                         .do(_ => debug(`Sending ping to redis...`))
                         .flatMap(() => this._redisClientObs.ping())
@@ -104,6 +118,13 @@ export class RedisClientManager {
     }
 
     createObservableClient() {
+        // If we are comming there because of the timeout, the client
+        // probably exists so kick it before recreating it
+        if (this._redisClientObs) {
+            this._redisClientObs.removeAllListeners();
+            this._redisClientObs = undefined;
+        }
+
         const redisClientObs: any = new EventEmitter();
         const sendCommand = this.sendCommand.bind(this);
         const client = this._client;
@@ -148,7 +169,9 @@ export class RedisClientManager {
                     observer.complete();
                 }
             });
-        }).timeout((this._config.command_timeout || 2) * 1000).retryWhen(e =>
+        })
+        .timeout((this._config.command_timeout || 2) * 1000)
+        .retryWhen(e =>
             e.flatMap(err => {
                 if (err instanceof TimeoutError) {
                     this._client.end(true);
